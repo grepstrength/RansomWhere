@@ -2,17 +2,14 @@
 
 # RansomWhere!
 
-**Build your own VM to quickly visit !**
+**Keep your personal infrastructure clean! Build your own VM to quickly visit ransomware data leak sites!**
 
 This uses a single Kali Linux VM 
 
 ## Configurations
 
 - **Cloud & IaC**: Azure provisioned with Terraform 
-- **Network**: Single VNet (`10.0.0.0/16`); VMs on snet-vms (`10.0.1.0/24`); Bastion on AzureBastionSubnet (`10.0.2.0/26`)
-- **VMs**: 2x Windows Server 2022 Datacenter with the Azure image `Standard_D4s_v5`, no public IPs
-- **Attack VM**: Ollama + `FableForge-AI/mythos-v2-8b` (swap to your preference)
-- **Victim VM**: OpenClaw + Ollama + `llama3.2:3b` (swap to your preference)
+- **VMs**: Single Kali 2026.2 VM
 - **Access**: Accessible via Bastion host with a basic SKU, with browser-based RDP
 - **Auth**: Azure identity via `az login`. Both the subscription and admin password are stored via environment variables... no credentials in code 
 
