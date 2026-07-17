@@ -25,5 +25,5 @@ provider "azurerm" {
 resource "azurerm_marketplace_agreement" "kali" {
   publisher = "kali-linux"
   offer     = "kali"
-  plan      = "kali-2026-2"
+  plan      = var.kali_sku #updated sku
 }
