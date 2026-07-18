@@ -17,3 +17,5 @@ override.tf.json
 *.key
 id_rsa
 id_ed25519
+# Saved plan files - can contain sensitive values
+*.tfplan
