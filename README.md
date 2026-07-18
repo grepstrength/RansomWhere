@@ -1,16 +1,10 @@
+![alt text](ransomwhere.png)
 
-
-# RansomWhere!
+# RansomWhere?
 
 **Keep your personal infrastructure clean!**
 
 Build your own burnable VM to safely visit ransomware data leak sites or potential phishing pages! Even if it gets compromised, a simple `terraform destroy` later and the TA gets nothing!
-
-This uses: 
-- a single Kali Linux VM
-  - TOR Browser
-  - RansomLook bookmarks to get the latest ransomware threat intel, including active .onion links
-- Bastion host to access the VM
 
 **STILL UNDER DEVELOPMENT**
 
@@ -18,6 +12,7 @@ This uses:
 
 - **Cloud & IaC**: Azure provisioned with Terraform 
 - **VMs**: Single Kali 2026.2 VM
+- **Features**: TOR Browser w/ RansomLook bookmarks to get the latest ransomware threat intel, including active .onion links
 - **Access**: Accessible via Bastion host with a basic SKU, with browser-based RDP
 - **Auth**: Azure identity via `az login`. Both the subscription and admin password are stored via environment variables... no credentials in code 
 
