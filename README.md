@@ -2,9 +2,15 @@
 
 # RansomWhere!
 
-**Keep your personal infrastructure clean! Build your own VM to quickly visit ransomware data leak sites!**
+**Keep your personal infrastructure clean!**
 
-This uses a single Kali Linux VM 
+Build your own burnable VM to safely visit ransomware data leak sites or potential phishing pages! Even if it gets compromised, a simple `terraform destroy` later and the TA gets nothing!
+
+This uses: 
+- a single Kali Linux VM
+  - TOR Browser
+  - RansomLook bookmarks to get the latest ransomware threat intel, including active .onion links
+- Bastion host to access the VM
 
 **STILL UNDER DEVELOPMENT**
 
@@ -17,7 +23,7 @@ This uses a single Kali Linux VM
 
 ## Terraform Setup
 
-**⚠️ At the time of development, the most recent Kali VM was `kali-2026-2`. Depending on when you try to `apply`, this may be obsolete. 
+*⚠️ At the time of development (July 2026), the most recent Kali VM was `kali-2026-2`. Depending on when you try to `apply`, this may be obsolete.*
 
 To get the currently offered kali images, run the below command and take the value from the SKU column, then enter it in `proviers.tf > resource "azurerm_marketplace_agreement" > plan`:
 
@@ -38,7 +44,7 @@ terraform apply     # build the lab (type yes to confirm)
 
 
 ### Destroy the lab
-Of course, when done, just run:
+Of course, when done (**or you get burned!!!**), just run:
 ```powershell
 terraform destroy
 ```
