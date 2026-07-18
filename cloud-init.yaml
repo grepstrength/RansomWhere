@@ -1,0 +1,80 @@
+﻿#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  #desktop+remote access
+  - kali-desktop-xfce
+  - xrdp
+  - dbus-x11
+  #browsers+fetch tooling
+  - firefox-esr
+  - curl
+  - gpg
+  - xz-utils
+write_files:
+  - path: /etc/firefox-esr/policies/policies.json
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {
+        "policies": {
+          "DisableTelemetry": true,
+          "DisableFirefoxStudies": true,
+          "Bookmarks": ${firefox_bookmarks_json}
+        }
+      }
+  - path: /etc/skel/.xsession
+    owner: root:root
+    permissions: '0644'
+    content: |
+      xfce4-session
+  - path: /tmp/torbrowser-policies.json
+    owner: root:root
+    permissions: '0644'
+    content: |
+      {
+        "policies": {
+          "Bookmarks": ${torbrowser_bookmarks_json}
+        }
+      }
+runcmd:
+  #xRDP
+  - systemctl enable --now xrdp
+  - cp /etc/skel/.xsession /home/${admin_username}/.xsession
+  - chown ${admin_username}:${admin_username} /home/${admin_username}/.xsession
+  - adduser xrdp ssl-cert
+  #Tor Browser
+  - |
+    set +e
+    TBDIR=/opt/tor-browser
+    TBVER="15.0.18"
+    TBTARBALL="tor-browser-linux-x86_64-$${TBVER}.tar.xz"
+    cd /tmp
+    curl -fsSL -o "$${TBTARBALL}" "https://dist.torproject.org/torbrowser/$${TBVER}/$${TBTARBALL}"
+    curl -fsSL -o "$${TBTARBALL}.asc" "https://dist.torproject.org/torbrowser/$${TBVER}/$${TBTARBALL}.asc"
+    gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org
+    if gpg --verify "$${TBTARBALL}.asc" "$${TBTARBALL}"; then
+      echo "TOR-BROWSER-GPG: SIGNATURE OK" | tee /var/log/ransomwhere-torbrowser.log
+    else
+      echo "TOR-BROWSER-GPG: VERIFICATION FAILED - INSTALLING ANYWAY (burn box)" | tee /var/log/ransomwhere-torbrowser.log
+    fi
+    mkdir -p "$${TBDIR}"
+    tar -xJf "$${TBTARBALL}" -C "$${TBDIR}" --strip-components=1
+    mkdir -p "$${TBDIR}/Browser/distribution"
+    cp /tmp/torbrowser-policies.json "$${TBDIR}/Browser/distribution/policies.json"
+    chown -R ${admin_username}:${admin_username} "$${TBDIR}"
+  - |
+    cat > /usr/share/applications/tor-browser.desktop <<'DESKTOP'
+    [Desktop Entry]
+    Type=Application
+    Name=Tor Browser
+    Exec=/opt/tor-browser/Browser/start-tor-browser
+    Icon=/opt/tor-browser/Browser/browser/chrome/icons/default/default128.png
+    Categories=Network;WebBrowser;
+    DESKTOP
+power_state:
+  mode: reboot          #reboot, because we want the box back up
+  message: "RansomWhere provisioning complete, rebooting"
+  timeout: 30           #seconds to wait for a graceful shutdown before forcing
+  condition: true       #always reboot (could gate on a command's exit code)
+final_message: "RansomWhere cloud-init finished after $UPTIME seconds at $TIMESTAMP"

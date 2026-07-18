@@ -2,7 +2,7 @@
 resource "azurerm_public_ip" "bastion" {
   name                = "${var.prefix}-bastion-pip"
   location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
   allocation_method   = "Static" # Bastion requires both. this is non negotiable 
   sku                 = "Standard"
   tags                = var.tags

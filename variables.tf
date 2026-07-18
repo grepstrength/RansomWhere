@@ -45,8 +45,8 @@ variable "bastion_subnet_prefix" {
 # 3. VIRTUAL MACHINE
 variable "vm_size" {
   type        = string
-  description = "Azure VM SKU. B2s is sufficient for slim Kali + XFCE + two browsers."
-  default     = "Standard_B2s"
+  description = "Azure VM SKU. D2s_v7 (2 vCPU / 8 GB) handles slim Kali + XFCE + two browsers. B-series and older D-series (v4/v5/v6) are restricted in eastus2 for free-tier subscriptions; run the az vm list-skus command in the README to find an available SKU for your region/subscription."
+  default     = "Standard_D2s_v7" #the v7 was available at the time of testing
 }
 
 variable "os_disk_size_gb" {
